@@ -5,11 +5,17 @@ from playwright.sync_api import Page, expect
 #import utils.secret_config
 from automationtest.src.pages.loginPage import LoginPage
 
+try:
+    PASSWORD = os.environ['PASSWORD']
+except KeyError:
+    import utils.secret_config
+    PASSWORD = utils.secret_config.PASSWORD
+
 
 def test_login_with_standard_user(set_up_tear_down) -> None:
     page = set_up_tear_down
     #credentials = {'username': 'standard_user', 'password': utils.secret_config.PASSWORD}
-    credentials = {'username': 'standard_user', 'password': os.environ['PASSWORD']}
+    credentials = {'username': 'standard_user', 'password': PASSWORD}
     login_p = LoginPage(page)
     products_p = login_p.do_login(credentials)
     expect(products_p.product_header).to_be_visible()
